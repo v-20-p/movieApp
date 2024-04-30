@@ -1,4 +1,4 @@
-package com.example.movieapp
+package com.example.movieapp.presention.screens
 
 import androidx.compose.runtime.Composable
 
