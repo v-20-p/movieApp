@@ -57,6 +57,8 @@ android {
 
 dependencies {
     val nav_version = "2.7.7"
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("com.google.dagger:hilt-android:2.48")
