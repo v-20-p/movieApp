@@ -2,6 +2,7 @@ package com.example.movieapp.presention.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -11,6 +12,7 @@ import com.example.movieapp.presention.screens.Popular.PopularMoviesViewModel
 import com.example.movieapp.presention.screens.onBoardingScreen.onBoardingScreen
 
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptionsBuilder
 import com.example.movieapp.presention.screens.Popular.TaskViewModel
 
 //taskViewModel: TaskViewModel = viewModel()
@@ -34,3 +36,9 @@ fun Nav(navController: NavHostController){
 
 }
 
+fun NavOptionsBuilder.popUpToTop(navController: NavController){
+    popUpTo(navController.currentBackStackEntry?.destination?.route ?:return){
+        inclusive=true
+    }
+
+}

@@ -34,20 +34,23 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.movieapp.R
 import com.example.movieapp.presention.navigation.Home
+import com.example.movieapp.presention.navigation.popUpToTop
+
 
 import com.example.movieapp.presention.screens.Popular.TaskViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun onBoardingScreen(navController: NavHostController, onBoardingViewModel: TaskViewModel) {
 
     val onBoardingCompletete by onBoardingViewModel.onBoardingCompleted.collectAsState()
     val scope = rememberCoroutineScope()
 if (onBoardingCompletete){
-    navController.navigate(Home.route)
+    navController.navigate(Home.route){
+        popUpToTop(navController)
+    }
 } else{
     LaunchedEffect(Unit) {
         delay(1000)
