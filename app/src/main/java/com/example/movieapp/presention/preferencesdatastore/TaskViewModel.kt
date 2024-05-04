@@ -1,4 +1,4 @@
-package com.example.movieapp.presention.screens.Popular
+package com.example.movieapp.presention.preferencesdatastore
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -22,7 +22,7 @@ class TaskViewModel @Inject constructor(
     private val readSafeUseCase: ReadSafeUseCase
 ) : ViewModel() {
     val onBoardingCompleted = MutableStateFlow(false)
-    var StartDestination= onBoarding.route
+    var StartDestination= Home.route
 
     init {
         getBoardingState()

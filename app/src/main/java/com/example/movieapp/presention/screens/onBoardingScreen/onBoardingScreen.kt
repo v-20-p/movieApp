@@ -37,9 +37,8 @@ import com.example.movieapp.presention.navigation.Home
 import com.example.movieapp.presention.navigation.popUpToTop
 
 
-import com.example.movieapp.presention.screens.Popular.TaskViewModel
+import com.example.movieapp.presention.preferencesdatastore.TaskViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 @Composable
