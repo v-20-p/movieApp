@@ -3,10 +3,20 @@ package com.example.movieapp.presention.screens.HomeScreen
 import Constrant.MOVIE_IMAGE_BASE_URL
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,21 +29,30 @@ import com.example.movieapp.R
 import com.example.movieapp.model.BackdropSize
 import com.example.movieapp.model.UIState
 import com.example.movieapp.presention.screens.Popular.PopularMoviesViewModel
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.example.movieapp.presention.navigation.MovieRoute
 
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun HomeScreen(viewModels: PopularMoviesViewModel = viewModel()) {
+fun HomeScreen(viewModels: PopularMoviesViewModel = viewModel(), navController: NavHostController) {
 
 
 
     Box(modifier = Modifier
         .fillMaxSize()
-        .background(MaterialTheme.colorScheme.tertiary)) {
+        .background(MaterialTheme.colorScheme.tertiary),
+
+        ) {
 
         Image(
             painter = painterResource(R.drawable.background),
@@ -41,58 +60,86 @@ fun HomeScreen(viewModels: PopularMoviesViewModel = viewModel()) {
             modifier = Modifier
                 .fillMaxSize()
 
-                .scale(1.5f)
+                .scale(1.5f, 2f)
+                .rotate(90f),
+
 
         )
-
-
-
-        val viewModel =viewModels
-        when (val result = viewModel.popularMoviesState.value) {
-            is UIState.Success -> {
-
-
-                LazyColumn(
-                    modifier = Modifier
-
-
-                ) {
-
-
-                    items(result.data?.results.orEmpty()) {
-
-
-                        GlideImage(
-                            model = MOVIE_IMAGE_BASE_URL + BackdropSize.w300 + it.backdropPath,
-                            contentDescription = " ",
-                            modifier = Modifier.padding(10.dp),
-                        )
-
-
-                        Text(
-                            text = it.title.orEmpty(),
-                            Modifier.padding(10.dp)
-                        )
-
+        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally){
+            Box(modifier = Modifier
+                .fillMaxWidth(.95f)
+                .height(150.dp)
+                .background(Color(0xfff6d776), RoundedCornerShape(0.dp, 0.dp, 20.dp, 20.dp)))
+            {
+                Column(Modifier.fillMaxSize(),Arrangement.Center,Alignment.CenterHorizontally) {
+                    Image(painter = painterResource(id = R.drawable.logo), contentDescription ="logo",Modifier.size(80.dp) )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Row (Modifier.fillMaxWidth(),Arrangement.SpaceAround,Alignment.CenterVertically){
+                        Text(text = "Recommended")
+                        Text(text = "Schedule")
+                        Text(text = "Coming Soon")
                     }
 
                 }
+
             }
 
-            is UIState.Empty -> Text(
-                text = "Empty",
-                Modifier.padding(10.dp)
-            )
 
-            is UIState.Error -> Text(
-                text = "Error",
-                Modifier.padding(10.dp)
-            )
+            val viewModel = viewModels
+            when (val result = viewModel.popularMoviesState.value) {
+                is UIState.Success -> {
 
-            is UIState.Loading -> Text(
-                text = "Loading",
-                Modifier.padding(10.dp)
-            )
+
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        verticalArrangement = Arrangement.spacedBy(20.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        modifier = Modifier.padding(10.dp)
+                    ) {
+
+
+                        items(result.data?.results.orEmpty()) {
+
+
+                            Column(Modifier.fillMaxSize(.8f).padding(0.dp,0.dp).background(Color.White,
+                                RoundedCornerShape(20.dp)
+                            ).clickable { navController.navigate(MovieRoute.route) }, horizontalAlignment = Alignment.CenterHorizontally) {
+                                GlideImage(
+                                    model = MOVIE_IMAGE_BASE_URL + BackdropSize.w1280 + it.backdropPath,
+                                    contentDescription = it.title.orEmpty(),
+                                    modifier = Modifier.padding(0.dp).fillMaxWidth().clip(
+                                        RoundedCornerShape(20.dp,20.dp,0.dp,0.dp)
+                                    ),
+                                    contentScale= ContentScale.Crop
+                                )
+
+
+                                Text(
+                                    text = it.title.orEmpty(),
+                                    Modifier.padding(10.dp).height(30.dp)
+                                )
+                            }
+
+                        }
+
+                    }
+                }
+
+                is UIState.Empty -> Text(
+                    text = "Empty",
+                    Modifier.padding(10.dp)
+                )
+
+                is UIState.Error -> Text(
+                    text = "Error",
+                    Modifier.padding(10.dp)
+                )
+
+                is UIState.Loading -> Text(
+                    text = "Loading",
+                    Modifier.padding(10.dp)
+                )
+            }
         }
 
     }

@@ -13,9 +13,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -35,6 +32,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.movieapp.presention.preferencesdatastore.TaskViewModel
 import com.example.movieapp.presention.screens.HomeScreen.FavTapScreen
 import com.example.movieapp.presention.screens.HomeScreen.ProfileTapScreen
+import com.example.movieapp.presention.screens.MovieDetailsScreen.MovieDetailsScreen
+import com.example.movieapp.presention.screens.MovieDetailsScreen.MovieDetailsViewModel
 
 //taskViewModel: TaskViewModel = viewModel()
 @Composable
@@ -49,13 +48,17 @@ fun Nav(navController: NavHostController){
 
             onBoardingScreen(onBoardingViewModel=onBoardingViewModel,navController = navController)
         }
+        composable(MovieRoute.route){
+            val parentViewModel = hiltViewModel<MovieDetailsViewModel>()
+            MovieDetailsScreen(parentViewModel,1041613)
+        }
 
 
         composable(TabBarItem.homeTap.title) {
             val parentViewModel = hiltViewModel<PopularMoviesViewModel>()
             bottonNav(navController){
 
-            HomeScreen(parentViewModel)
+            HomeScreen(parentViewModel,navController)
             }
         }
         composable(TabBarItem.favTap.title){
@@ -65,6 +68,7 @@ fun Nav(navController: NavHostController){
             }
 
         }
+
         composable(TabBarItem.profileTap.title){
             bottonNav(navController){
             ProfileTapScreen()
