@@ -22,5 +22,5 @@ object onBoarding:Dest{
     override val route: String="onBoarding"
 }
 object MovieRoute:Dest{
-    override val route: String="onBoarding"
+    override val route: String="movieDetails"
 }

@@ -11,7 +11,7 @@ import javax.inject.Singleton
 class MovieDetailsRepository @Inject constructor(
     private val movieApi: MovieApi
 ) {
-    suspend fun getMovieDetails(movieId: Int): UIState<MovieDetailsRepo> {
+    suspend fun getMovieDetails(movieId: Int?): UIState<MovieDetailsRepo> {
         return try {
             val response=movieApi.getDetailsMovie(movieId)
             if (response.isSuccessful && response.body()!=null ){

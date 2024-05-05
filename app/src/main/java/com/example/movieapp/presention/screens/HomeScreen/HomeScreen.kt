@@ -37,16 +37,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
+import coil.compose.AsyncImage
 
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.example.movieapp.model.Results
 import com.example.movieapp.presention.navigation.MovieRoute
+import kotlinx.coroutines.flow.MutableStateFlow
 
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun HomeScreen(viewModels: PopularMoviesViewModel = viewModel(), navController: NavHostController) {
+fun HomeScreen(popularMoviesState: MutableStateFlow<PagingData<Results>>, navController: NavHostController) {
 
-
+    val moviePagingItems =popularMoviesState.collectAsLazyPagingItems()
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -85,9 +90,9 @@ fun HomeScreen(viewModels: PopularMoviesViewModel = viewModel(), navController: 
             }
 
 
-            val viewModel = viewModels
-            when (val result = viewModel.popularMoviesState.value) {
-                is UIState.Success -> {
+
+
+
 
 
                     LazyVerticalGrid(
@@ -98,68 +103,57 @@ fun HomeScreen(viewModels: PopularMoviesViewModel = viewModel(), navController: 
                     ) {
 
 
-                        items(result.data?.results.orEmpty()) {
+                        items(moviePagingItems.itemCount) { index->
+
+                            if (moviePagingItems[index]?.adult==false){
+
+                                Column(
+                                    Modifier
+                                        .fillMaxSize(.8f)
+                                        .padding(0.dp, 0.dp)
+                                        .background(
+                                            Color.White,
+                                            RoundedCornerShape(20.dp)
+                                        )
+                                        .clickable { navController.navigate(MovieRoute.route + "/${moviePagingItems[index]?.id}") },
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+//
+                                    AsyncImage(
+                                        model = MOVIE_IMAGE_BASE_URL + BackdropSize.w1280 + moviePagingItems[index]?.backdropPath,
+                                        contentDescription = moviePagingItems[index]?.title.orEmpty(),
+                                        modifier = Modifier
+                                            .padding(0.dp).
+                                                size(250.dp)
+                                            .fillMaxWidth()
+                                            .clip(
+                                                RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp)
+                                            ),
+                                        contentScale = ContentScale.Crop
+                                    )
 
 
-                            Column(Modifier.fillMaxSize(.8f).padding(0.dp,0.dp).background(Color.White,
-                                RoundedCornerShape(20.dp)
-                            ).clickable { navController.navigate(MovieRoute.route) }, horizontalAlignment = Alignment.CenterHorizontally) {
-                                GlideImage(
-                                    model = MOVIE_IMAGE_BASE_URL + BackdropSize.w1280 + it.backdropPath,
-                                    contentDescription = it.title.orEmpty(),
-                                    modifier = Modifier.padding(0.dp).fillMaxWidth().clip(
-                                        RoundedCornerShape(20.dp,20.dp,0.dp,0.dp)
-                                    ),
-                                    contentScale= ContentScale.Crop
-                                )
-
-
-                                Text(
-                                    text = it.title.orEmpty(),
-                                    Modifier.padding(10.dp).height(30.dp)
-                                )
+                                    Text(
+                                        text = moviePagingItems[index]?.title.orEmpty(),
+                                        Modifier
+                                            .padding(10.dp)
+                                            .height(30.dp)
+                                    )
+                                }
                             }
-
                         }
 
                     }
                 }
 
-                is UIState.Empty -> Text(
-                    text = "Empty",
-                    Modifier.padding(10.dp)
-                )
-
-                is UIState.Error -> Text(
-                    text = "Error",
-                    Modifier.padding(10.dp)
-                )
-
-                is UIState.Loading -> Text(
-                    text = "Loading",
-                    Modifier.padding(10.dp)
-                )
             }
-        }
+
 
     }
 
-//        val tabBarItems = listOf(homeTap,favTap,profileTap)
-//
-//            Scaffold(bottomBar = {
-//                TabView(
-//                    tabBarItems = tabBarItems,
-//                    navController = navController
-//                )
-//
-//
-//        }){
-//                it.calculateTopPadding()
-//
-//            }
 
 
-}
+
 
 
 

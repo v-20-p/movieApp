@@ -13,6 +13,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -28,7 +31,9 @@ import com.example.movieapp.presention.screens.onBoardingScreen.onBoardingScreen
 
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navArgument
 import com.example.movieapp.presention.preferencesdatastore.TaskViewModel
 import com.example.movieapp.presention.screens.HomeScreen.FavTapScreen
 import com.example.movieapp.presention.screens.HomeScreen.ProfileTapScreen
@@ -39,56 +44,74 @@ import com.example.movieapp.presention.screens.MovieDetailsScreen.MovieDetailsVi
 @Composable
 
 fun Nav(navController: NavHostController){
+var showBottonBar by rememberSaveable {
+    mutableStateOf(false)
+}
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    showBottonBar  = when(navBackStackEntry?.destination?.route){
+        onBoarding.route ->false
+        MovieRoute.route +"/{movieId}"-> false
+
+        else ->true
+    }
 
 
 
     val onBoardingViewModel: TaskViewModel = hiltViewModel()
-    NavHost(navController = navController,startDestination = onBoardingViewModel.StartDestination){
-        composable(onBoarding.route) {
+    bottonNav(navController,showBottonBar) {
+        NavHost(
+            navController = navController,
+            startDestination = onBoardingViewModel.StartDestination
+        ) {
+            composable(onBoarding.route) {
 
-            onBoardingScreen(onBoardingViewModel=onBoardingViewModel,navController = navController)
-        }
-        composable(MovieRoute.route){
-            val parentViewModel = hiltViewModel<MovieDetailsViewModel>()
-            MovieDetailsScreen(parentViewModel,1041613)
-        }
-
-
-        composable(TabBarItem.homeTap.title) {
-            val parentViewModel = hiltViewModel<PopularMoviesViewModel>()
-            bottonNav(navController){
-
-            HomeScreen(parentViewModel,navController)
+                onBoardingScreen(
+                    onBoardingViewModel = onBoardingViewModel,
+                    navController = navController
+                )
             }
-        }
-        composable(TabBarItem.favTap.title){
-            bottonNav(navController){
-
-            FavTapScreen()
+            composable(MovieRoute.route + "/{movieId}", arguments =
+            listOf(navArgument("movieId") {
+                type = NavType.IntType
+            })) {
+                val parentViewModel = hiltViewModel<MovieDetailsViewModel>()
+                MovieDetailsScreen(parentViewModel, it)
             }
-
-        }
-
-        composable(TabBarItem.profileTap.title){
-            bottonNav(navController){
-            ProfileTapScreen()
+            composable(TabBarItem.homeTap.title) {
+                val parentViewModel = hiltViewModel<PopularMoviesViewModel>()
+                HomeScreen(parentViewModel.popularMoviesState, navController)
+            }
+            composable(TabBarItem.favTap.title) {
+                    FavTapScreen()
 
             }
 
-        }
+            composable(TabBarItem.profileTap.title) {
+                    ProfileTapScreen()
 
+            }
+
+        }
     }
 
 }
 
 
 @Composable
-fun bottonNav(navController:NavHostController,function: @Composable () -> Unit){
+fun bottonNav(
+    navController: NavHostController,
+    showBottonBar: Boolean,
+    function: @Composable () -> Unit
+){
+
 
         val tabBarItems = listOf(TabBarItem.favTap,TabBarItem.homeTap,TabBarItem.profileTap)
 
 
+
             Scaffold(bottomBar = {
+                if (showBottonBar)
                 TabView(
                     tabBarItems = tabBarItems,
                     navController = navController
@@ -122,7 +145,7 @@ fun TabView(tabBarItems: List<TabBarItem>, navController: NavHostController) {
     val currentRoute = navBackStackEntry?.destination?.route
 
     NavigationBar(containerColor = Color(0xff374951),tonalElevation=1.dp) {
-        tabBarItems.forEachIndexed { index, tabBarItem ->
+        tabBarItems.forEachIndexed { _, tabBarItem ->
             NavigationBarItem(
                 selected = currentRoute == tabBarItem.title,
                 onClick = {
@@ -137,7 +160,7 @@ fun TabView(tabBarItems: List<TabBarItem>, navController: NavHostController) {
                     TabBarIconView(
                         isSelected = currentRoute == tabBarItem.title,
                         selectedIcon = tabBarItem.selectedIcon,
-                        title = tabBarItem.title,
+
                     )
                 },
                 label = { Text(text = tabBarItem.title, color = Color.White) },
@@ -162,7 +185,7 @@ fun TabBarIconView(
     @DrawableRes
     selectedIcon: Int,
 
-    title: String,
+
 
     ) {
     Column {

@@ -25,7 +25,7 @@ interface  MovieApi{
     @GET("3/movie/{id}")
     suspend fun getDetailsMovie(
         @Path("id")
-        id:Int,
+        id:Int? ,
         @Query("api_key") apiKey: String = BuildConfig.TMOB_API_KEY,
         @Query("language") language: String = "en-US"
     ):Response<MovieDetailsRepo>

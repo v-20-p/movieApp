@@ -20,7 +20,7 @@ class MovieDetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     var movieDetailsState: MutableState<UIState<MovieDetailsRepo>> = mutableStateOf(UIState.Loading())
-     fun getMovieDetails(id: Int) {
+     fun getMovieDetails(id: Int?) {
         viewModelScope.launch {
             val response = getMovieDetailsUseCase.invoke(id)
             when (response) {
