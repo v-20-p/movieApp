@@ -45,7 +45,7 @@ import kotlinx.coroutines.delay
 fun onBoardingScreen(navController: NavHostController, onBoardingViewModel: TaskViewModel) {
 
     val onBoardingCompletete by onBoardingViewModel.onBoardingCompleted.collectAsState()
-    val scope = rememberCoroutineScope()
+//    val scope = rememberCoroutineScope()
 if (onBoardingCompletete){
     navController.navigate(Home.route){
         popUpToTop(navController)

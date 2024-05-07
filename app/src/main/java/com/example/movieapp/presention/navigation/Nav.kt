@@ -3,6 +3,7 @@ package com.example.movieapp.presention.navigation
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -24,7 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.movieapp.presention.screens.HomeScreen.HomeScreen
+import com.example.movieapp.presention.screens.Popular.HomeScreen
 import com.example.movieapp.presention.screens.Popular.PopularMoviesViewModel
 //import com.example.movieapp.presention.preferencesdatastore.TaskViewModel
 import com.example.movieapp.presention.screens.onBoardingScreen.onBoardingScreen
@@ -39,6 +40,8 @@ import com.example.movieapp.presention.screens.HomeScreen.FavTapScreen
 import com.example.movieapp.presention.screens.HomeScreen.ProfileTapScreen
 import com.example.movieapp.presention.screens.MovieDetailsScreen.MovieDetailsScreen
 import com.example.movieapp.presention.screens.MovieDetailsScreen.MovieDetailsViewModel
+import com.example.movieapp.presention.screens.searchScreen.SearchScreen
+import com.example.movieapp.presention.screens.searchScreen.SearchViewModel
 
 //taskViewModel: TaskViewModel = viewModel()
 @Composable
@@ -91,6 +94,13 @@ var showBottonBar by rememberSaveable {
                     ProfileTapScreen()
 
             }
+            composable(TabBarItem.SearchTap.title) {
+                val parentViewModel = hiltViewModel<SearchViewModel>()
+                SearchScreen(parentViewModel,navController)
+
+            }
+
+
 
         }
     }
@@ -106,10 +116,7 @@ fun bottonNav(
 ){
 
 
-        val tabBarItems = listOf(TabBarItem.favTap,TabBarItem.homeTap,TabBarItem.profileTap)
-
-
-
+        val tabBarItems = listOf(TabBarItem.favTap,TabBarItem.homeTap,TabBarItem.SearchTap,TabBarItem.profileTap)
             Scaffold(bottomBar = {
                 if (showBottonBar)
                 TabView(
@@ -134,6 +141,7 @@ fun bottonNav(
 fun NavOptionsBuilder.popUpToTop(navController: NavController){
     popUpTo(navController.currentBackStackEntry?.destination?.route ?:return){
         inclusive=true
+        saveState=true
     }
 
 }
@@ -144,7 +152,9 @@ fun TabView(tabBarItems: List<TabBarItem>, navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    NavigationBar(containerColor = Color(0xff374951),tonalElevation=1.dp) {
+    NavigationBar(containerColor = Color(0xff374951),tonalElevation=1.dp, modifier = Modifier.fillMaxWidth()
+
+    ) {
         tabBarItems.forEachIndexed { _, tabBarItem ->
             NavigationBarItem(
                 selected = currentRoute == tabBarItem.title,
@@ -152,7 +162,9 @@ fun TabView(tabBarItems: List<TabBarItem>, navController: NavHostController) {
                     if (currentRoute != tabBarItem.title) {
                         navController.navigate(tabBarItem.title) {
                             popUpToTop(navController)
+                            restoreState =true
                             launchSingleTop = true
+
                         }
                     }
                 },

@@ -1,4 +1,4 @@
-package com.example.movieapp.presention.screens.HomeScreen
+package com.example.movieapp.presention.screens.Popular
 
 import Constrant.MOVIE_IMAGE_BASE_URL
 import androidx.compose.foundation.Image
@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,18 +23,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.GlideImage
 import com.example.movieapp.R
 import com.example.movieapp.model.BackdropSize
-import com.example.movieapp.model.UIState
-import com.example.movieapp.presention.screens.Popular.PopularMoviesViewModel
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -88,12 +83,6 @@ fun HomeScreen(popularMoviesState: MutableStateFlow<PagingData<Results>>, navCon
                 }
 
             }
-
-
-
-
-
-
 
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),

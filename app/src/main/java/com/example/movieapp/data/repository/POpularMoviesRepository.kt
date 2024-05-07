@@ -37,6 +37,15 @@ class PopularMoviesRepository @Inject constructor(
 
         ).flow
     }
+    fun getSearchMovies(query:String): Flow<PagingData<Results>> {
+        return Pager(
+            config = PagingConfig(pageSize = 15, prefetchDistance = 2),
+            pagingSourceFactory = {
+                MoviePagingSource(movieApi,query)
+            }
+
+        ).flow
+    }
 
 
 

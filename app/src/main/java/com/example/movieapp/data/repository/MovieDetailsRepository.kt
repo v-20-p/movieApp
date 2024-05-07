@@ -1,6 +1,7 @@
 package com.example.movieapp.data.repository
 
 import com.example.movieapp.data.remote.MovieApi
+import com.example.movieapp.model.CreditsRepo
 import com.example.movieapp.model.MovieDetailsRepo
 
 import com.example.movieapp.model.UIState
@@ -23,6 +24,19 @@ class MovieDetailsRepository @Inject constructor(
             UIState.Error(e.message.toString())
         }
     }
+    suspend fun getCredits(movieId: Int?): UIState<CreditsRepo> {
+        return try {
+            val response=movieApi.getCreditsMovie(movieId)
+            if (response.isSuccessful && response.body()!=null ){
+                UIState.Success(response.body())
+            }else{
+                UIState.Empty(message = response.message().toString())
+            }
+        }catch (e:Exception){
+            UIState.Error(e.message.toString())
+        }
+    }
+
 
 
 
