@@ -40,9 +40,8 @@ import com.example.movieapp.model.UIState
 @Composable
 fun MovieDetailsScreen(viewModels: MovieDetailsViewModel = viewModel(), receivedArgument: NavBackStackEntry){
 
+
     val id = receivedArgument.arguments?.getInt("movieId")
-
-
 
         LaunchedEffect(key1 = Unit) {
                 viewModels.getMovieDetails(id)
@@ -161,17 +160,11 @@ fun MovieDetailsScreen(viewModels: MovieDetailsViewModel = viewModel(), received
                             }
                             Text(text = " ${crew?.name}")
                         }
-//                        Text(text = "${MOVIE_IMAGE_BASE_URL + BackdropSize.w1280 + crew?.profilePath}")
 
 
                     }
 
-//                    GlideImage(
-//                        model = MOVIE_IMAGE_BASE_URL + BackdropSize.w1280 + data?.,
-//                        contentDescription = data?.title
-//                    )
-//                    Text(text = data?.title.orEmpty())
-//                    Text(text = "${data?.id}")
+
                 }
 
 

@@ -1,6 +1,10 @@
 package com.example.movieapp.presention.navigation
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,6 +40,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.example.movieapp.presention.preferencesdatastore.TaskViewModel
+import com.example.movieapp.presention.screens.HomeScreen.AccountViewModel
 import com.example.movieapp.presention.screens.HomeScreen.FavTapScreen
 import com.example.movieapp.presention.screens.HomeScreen.ProfileTapScreen
 import com.example.movieapp.presention.screens.MovieDetailsScreen.MovieDetailsScreen
@@ -77,7 +82,21 @@ var showBottonBar by rememberSaveable {
             composable(MovieRoute.route + "/{movieId}", arguments =
             listOf(navArgument("movieId") {
                 type = NavType.IntType
-            })) {
+            })
+            ,
+
+                enterTransition  = {
+                    fadeIn() + slideInVertically(animationSpec = tween(1400),
+                        initialOffsetY = { fullHeight -> fullHeight })
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(1000)
+                    )
+                }
+
+            ) {
                 val parentViewModel = hiltViewModel<MovieDetailsViewModel>()
                 MovieDetailsScreen(parentViewModel, it)
             }
@@ -86,12 +105,14 @@ var showBottonBar by rememberSaveable {
                 HomeScreen(parentViewModel.popularMoviesState, navController)
             }
             composable(TabBarItem.favTap.title) {
-                    FavTapScreen()
+                val parentViewModel = hiltViewModel<PopularMoviesViewModel>()
+                    FavTapScreen(parentViewModel)
 
             }
 
             composable(TabBarItem.profileTap.title) {
-                    ProfileTapScreen()
+                val parentViewModel = hiltViewModel<AccountViewModel>()
+                    ProfileTapScreen(parentViewModel,navController)
 
             }
             composable(TabBarItem.SearchTap.title) {
@@ -108,6 +129,7 @@ var showBottonBar by rememberSaveable {
 }
 
 
+
 @Composable
 fun bottonNav(
     navController: NavHostController,
@@ -117,7 +139,8 @@ fun bottonNav(
 
 
         val tabBarItems = listOf(TabBarItem.favTap,TabBarItem.homeTap,TabBarItem.SearchTap,TabBarItem.profileTap)
-            Scaffold(bottomBar = {
+
+    Scaffold(bottomBar = {
                 if (showBottonBar)
                 TabView(
                     tabBarItems = tabBarItems,

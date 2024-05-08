@@ -4,6 +4,8 @@ package com.example.movieapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -24,10 +26,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navigateor = rememberNavController()
             MovieAppTheme {
-                Text(text = "s")
 
 
-                  Nav(navigateor)
+
+                Surface(color = MaterialTheme.colorScheme.tertiary) { Nav(navigateor) }
 
 
                 }
