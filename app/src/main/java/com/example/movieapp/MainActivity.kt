@@ -18,9 +18,6 @@ import com.example.movieapp.presention.navigation.Nav
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

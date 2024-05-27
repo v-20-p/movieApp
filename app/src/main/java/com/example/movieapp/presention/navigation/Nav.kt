@@ -175,7 +175,7 @@ fun TabView(tabBarItems: List<TabBarItem>, navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    NavigationBar(containerColor = Color(0xff374951),tonalElevation=1.dp, modifier = Modifier.fillMaxWidth()
+    NavigationBar(containerColor = Color(0xff374951),tonalElevation=1.dp, modifier = Modifier.fillMaxWidth(1f)
 
     ) {
         tabBarItems.forEachIndexed { _, tabBarItem ->
